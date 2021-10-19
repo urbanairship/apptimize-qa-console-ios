@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "ApptimizeQAConsole",
     platforms: [
-        .iOS(.v11)
+        .iOS(.v13)
     ],
     products: [
         .library(
@@ -29,5 +29,6 @@ let package = Package(
         .testTarget(
             name: "ApptimizeQAConsoleTests",
             dependencies: ["ApptimizeQAConsole"])
-    ]
+    ],
+    swiftLanguageVersions: [ .v5 ]
 )
