@@ -13,6 +13,7 @@ The Apptimize QA console is a framework that can be integrated into your mobile 
 ## Adding the Framework to your Application
 
 ### Swift Package
+Refer to the official documenation at [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) for detailed instructions.
 
 1. Create or open an iOS Application project.
 2. Click **File —> Add Packages** and search for the package URL `https://github.com/urbanairship/apptimize-qa-console-ios`. 
@@ -20,7 +21,20 @@ The Apptimize QA console is a framework that can be integrated into your mobile 
 
 ### CocoaPods
 
-TODO: Fill in this secion
+Refer to CocoaPod’s [Getting Started Guide](https://guides.cocoapods.org/using/getting-started.html) for detailed instructions.
+
+1. Add the following to your `Podfile` to import ApptimizeQAConsole as a dependency.
+
+   ```
+   pod 'ApptimizeQAConsole'
+   ```
+
+2. Save your `Podfile`.
+3. And then run the following from the command line in your application's directory.
+
+   ```bash
+   pod install
+   ```
 
 ## Integrating in your Application
 
