@@ -4,7 +4,7 @@ For more information see the [QA Console FAQ page](https://faq.apptimize.com/hc/
 
 ## Introduction
 
-The Apptimize QA console is a framework that can be integrated into your **mobile app**. It enables you to **preview variants in different combinations from all of your active feature flags and experiments** on a simulator or device. This approach of QA works well for customers with large teams that would like to test hands-on while using the app. Integrating the QA console is a simple one-time process. Once the console is in place, it works by overriding your allocations and forcing your selected variants internally.
+The Apptimize QA console is a framework that can be integrated into your mobile app. It enables you to preview variants in different combinations from all of your active feature flags and experiments on a simulator or device. This approach of QA works well for customers with large teams that would like to test hands-on while using the app. Integrating the QA console is a simple one-time process. Once the console is in place, it works by overriding your allocations and forcing your selected variants internally.
 
 > #### Note
 >
@@ -15,7 +15,7 @@ The Apptimize QA console is a framework that can be integrated into your **mobil
 ### Swift Package
 
 1. Create or open an iOS Application project.
-2. Click **File —> Add Packages**and search for the package URL `https://github.com/urbanairship/apptimize-qa-console-ios`. 
+2. Click **File —> Add Packages** and search for the package URL `https://github.com/urbanairship/apptimize-qa-console-ios`. 
 3. Specify the version (or use the `main` branch) and click `Add Package`.
 
 ### CocoaPods
@@ -24,7 +24,7 @@ TODO: Fill in this secion
 
 ## Integrating in your Application
 
-1.  Add the package (see [Adding the Package](#Adding the Package)).
+1.  Add the package (see [Adding the Framework to your Application](#adding-the-framework-to-your-application)).
 
 2. Open the source for the `UIApplicationDelegate`.
 
