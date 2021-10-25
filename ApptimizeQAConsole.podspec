@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'Apache', :file => 'LICENSE.md' }
   s.source           = { :git => 'https://github.com/urbanairship/apptimize-qa-console-ios.git', :tag => s.version.to_s }
   s.ios.deployment_target = '13.0'
+  s.dependency 'Apptimize', '>= 3'
   s.swift_version    = '5.0'
   s.source_files     = 'Sources/ApptimizeQAConsole/**/*'
 end
