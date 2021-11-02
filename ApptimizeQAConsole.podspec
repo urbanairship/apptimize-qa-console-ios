@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ApptimizeQAConsole'
-  s.version          = '1.0.0'
+  s.version          = '1.0.2'
   s.summary          = 'Apptimize QA Console'
   s.description      = 'Preview variants in different combinations from all of your active feature flags and experiments.'
   s.homepage         = 'http://apptimize.com/'
