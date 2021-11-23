@@ -13,8 +13,8 @@
 		015EEAE5271F5F7E000F0D05 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 015EEAE3271F5F7E000F0D05 /* Main.storyboard */; };
 		015EEAE7271F5F89000F0D05 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 015EEAE6271F5F89000F0D05 /* Assets.xcassets */; };
 		015EEAEA271F5F89000F0D05 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 015EEAE8271F5F89000F0D05 /* LaunchScreen.storyboard */; };
-		015EEAF3271F60B8000F0D05 /* Apptimize in Frameworks */ = {isa = PBXBuildFile; productRef = 015EEAF2271F60B8000F0D05 /* Apptimize */; };
 		015EEAF8271F68D9000F0D05 /* ApptimizeQAConsole in Frameworks */ = {isa = PBXBuildFile; productRef = 015EEAF7271F68D9000F0D05 /* ApptimizeQAConsole */; };
+		01D4DB91273ADD3E00DC100D /* Apptimize in Frameworks */ = {isa = PBXBuildFile; productRef = 01D4DB90273ADD3E00DC100D /* Apptimize */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +27,7 @@
 		015EEAE9271F5F89000F0D05 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		015EEAEB271F5F89000F0D05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		015EEAF5271F60CA000F0D05 /* apptimize-qa-console-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "apptimize-qa-console-ios"; path = ../..; sourceTree = "<group>"; };
+		01D4DB8A273AD8EB00DC100D /* Apptimize.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Apptimize.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,8 +35,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01D4DB91273ADD3E00DC100D /* Apptimize in Frameworks */,
 				015EEAF8271F68D9000F0D05 /* ApptimizeQAConsole in Frameworks */,
-				015EEAF3271F60B8000F0D05 /* Apptimize in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +86,7 @@
 		015EEAF6271F68D9000F0D05 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				01D4DB8A273AD8EB00DC100D /* Apptimize.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -106,8 +108,8 @@
 			);
 			name = QAConsoleIntegration;
 			packageProductDependencies = (
-				015EEAF2271F60B8000F0D05 /* Apptimize */,
 				015EEAF7271F68D9000F0D05 /* ApptimizeQAConsole */,
+				01D4DB90273ADD3E00DC100D /* Apptimize */,
 			);
 			productName = QAConsoleIntegration;
 			productReference = 015EEADA271F5F7E000F0D05 /* QAConsoleIntegration.app */;
@@ -138,7 +140,7 @@
 			);
 			mainGroup = 015EEAD1271F5F7E000F0D05;
 			packageReferences = (
-				015EEAF1271F60B8000F0D05 /* XCRemoteSwiftPackageReference "apptimize-ios-kit" */,
+				01D4DB8F273ADD3E00DC100D /* XCRemoteSwiftPackageReference "apptimize-ios-kit" */,
 			);
 			productRefGroup = 015EEADB271F5F7E000F0D05 /* Products */;
 			projectDirPath = "";
@@ -391,25 +393,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		015EEAF1271F60B8000F0D05 /* XCRemoteSwiftPackageReference "apptimize-ios-kit" */ = {
+		01D4DB8F273ADD3E00DC100D /* XCRemoteSwiftPackageReference "apptimize-ios-kit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/urbanairship/apptimize-ios-kit";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		015EEAF2271F60B8000F0D05 /* Apptimize */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 015EEAF1271F60B8000F0D05 /* XCRemoteSwiftPackageReference "apptimize-ios-kit" */;
-			productName = Apptimize;
-		};
 		015EEAF7271F68D9000F0D05 /* ApptimizeQAConsole */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApptimizeQAConsole;
+		};
+		01D4DB90273ADD3E00DC100D /* Apptimize */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 01D4DB8F273ADD3E00DC100D /* XCRemoteSwiftPackageReference "apptimize-ios-kit" */;
+			productName = Apptimize;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

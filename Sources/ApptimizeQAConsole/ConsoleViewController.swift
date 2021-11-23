@@ -9,17 +9,17 @@ import UIKit
 import Apptimize
 
 class ConsoleViewController: UIViewController {
-
+    
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var noDataLbl: UILabel!
     @IBOutlet private weak var loadingActivityIndicator: UIActivityIndicatorView!
     
     private var experiments: [ExperimentInfo] = []
     private var filteredData: [ExperimentInfo] = []
+    private var knownWinnerNames: [Int: String] = [:]
     private var nameFilter: String?
     private var enrolledVariantIds: [Int] = []
     var onClosed: (() -> Void)?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,19 +32,46 @@ class ConsoleViewController: UIViewController {
         self.navigationItem.titleView = filterBar
         
         ConsoleTableViewCell.registerClass(in: self.tableView)
-        self.tableView.tableFooterView = UIView()
+        
+        
+        addFooterView()
+        
         refreshList()
+    }
+    
+    fileprivate func addFooterView() {
+        let font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+
+        let footerView = UITextView()
+        footerView.text = "Apptimize Version: \(Apptimize.libraryVersion())\nApptimize QA Console Version: \(ApptimizeQAConsole.version())"
+        footerView.font = font
+        footerView.textColor = .darkGray
+        footerView.backgroundColor = .systemGray6
+        footerView.isEditable = false
+        footerView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        footerView.isScrollEnabled = false
+        
+        let width = self.tableView.bounds.size.width
+        let size = footerView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height))
+        
+        if footerView.frame.size.height != size.height {
+            footerView.frame.size.height = size.height
+        }
+        
+        self.tableView.tableFooterView = footerView
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(onMetadataStatusChanged(notification:)), name: NSNotification.Name.ApptimizeMetadataStateChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onTestProcessedNotification(notification:)), name: NSNotification.Name.ApptimizeTestsProcessed, object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name.ApptimizeQAConsoleWillAppear, object: ApptimizeQAConsole.shared)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.post(name: NSNotification.Name.ApptimizeQAConsoleWillDisappear, object: ApptimizeQAConsole.shared)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -96,9 +123,17 @@ class ConsoleViewController: UIViewController {
     
     @objc
     private func refreshList() {
-        self.experiments = processExperiments(source: Apptimize.getVariants() ?? [:])
+        let variants = Apptimize.getVariants() ?? [:]
+        let winnerInfo = Array((Apptimize.instantUpdateAndWinnerInfo() ?? [:]).values).filter({ !$0.isInstantUpdate() })
+        let testInfo = Apptimize.testInfo() ?? [:]
+                
+        self.experiments = processExperiments(source: variants, testInfo: Array(testInfo.values), winnerInfo: winnerInfo)
+        
         applyFilter()
-        self.enrolledVariantIds = Apptimize.testInfo()?.values.map({ $0.enrolledVariantID().intValue }) ?? []
+        
+        self.enrolledVariantIds = testInfo.values.map({ $0.enrolledVariantID().intValue })
+        self.enrolledVariantIds.append(contentsOf: winnerInfo.map({ $0.winningVariantID().intValue }))
+        
         self.noDataLbl.isHidden = !self.filteredData.isEmpty
         self.loadingActivityIndicator.stopAnimating()
         self.tableView.reloadData()
@@ -116,7 +151,7 @@ class ConsoleViewController: UIViewController {
         }
     }
     
-    private func processExperiments(source: [String: [String: Any]]) -> [ExperimentInfo] {
+    private func processExperiments(source: [String: [String: Any]], testInfo: [ApptimizeTestInfo], winnerInfo: [ApptimizeInstantUpdateOrWinnerInfo]) -> [ExperimentInfo] {
         var experimentIdToNames = [Int: String]()
         
         return source.values
@@ -125,13 +160,24 @@ class ConsoleViewController: UIViewController {
                     let experimentName = item["experimentName"] as? String,
                     let experimentId = item["experimentID"] as? Int,
                     let variant = VariantInfo(source: item) {
-                    experimentIdToNames[experimentId] = experimentName
-                    if !partialResult.keys.contains(experimentId) {
-                        partialResult[experimentId] = []
+                        if experimentName.isEmpty {
+                            if let winner = winnerInfo.first(where: { $0.winningExperimentID().intValue == experimentId }) {
+                                experimentIdToNames[experimentId] = "Winner for: \(winner.winningExperimentName())"
+                                knownWinnerNames[experimentId] = winner.winningExperimentName()
+                            } else if let winnerName = knownWinnerNames[experimentId] {
+                                experimentIdToNames[experimentId] = "Winner for: \(winnerName)"
+                            } else {
+                                experimentIdToNames[experimentId] = "Experiment Id: \(experimentId)"
+                            }
+                        } else {
+                            experimentIdToNames[experimentId] = experimentName
+                        }
+                        if !partialResult.keys.contains(experimentId) {
+                            partialResult[experimentId] = []
+                        }
+                        partialResult[experimentId]?.append(variant)
                     }
-                    partialResult[experimentId]?.append(variant)
                 }
-            }
             .sorted(by: { $0.key > $1.key }) // sort by creation order
             .compactMap { experimentId, variants in
                 guard let name = experimentIdToNames[experimentId] else { return nil }
@@ -181,20 +227,20 @@ extension ConsoleViewController : UITableViewDelegate {
     
     private func toggleSelection(for indexPath: IndexPath) {
         let variants = self.filteredData[indexPath.section].variants
-        let selectedVarintId = variants[indexPath.row].id
+        let selectedVariantId = variants[indexPath.row].id
         
-        if (enrolledVariantIds.contains(where: { $0 == selectedVarintId })) {
-            return
+        if (enrolledVariantIds.contains(where: { $0 == selectedVariantId })) {
+            enrolledVariantIds.removeAll(where: { $0 == selectedVariantId })
+        } else {
+            enrolledVariantIds.removeAll(where: { variantId in variants.contains(where: { $0.id == variantId }) })
+            enrolledVariantIds.append(selectedVariantId)
         }
-        
-        enrolledVariantIds.removeAll { enrolledId in
-            variants.contains(where: { $0.id == enrolledId })
-        }
-        
-        enrolledVariantIds.append(selectedVarintId)
-        
+
         Apptimize.clearAllForcedVariants()
-        enrolledVariantIds.forEach(Apptimize.forceVariant)
+
+        enrolledVariantIds.forEach({ Apptimize.forceVariant($0) })
+
+        self.refreshList()
     }
 }
 
@@ -223,7 +269,7 @@ internal struct VariantInfo {
     }
 }
 
-private struct ExperimentInfo {
+internal struct ExperimentInfo {
     let id : Int
     let name : String
     let variants: [VariantInfo]
