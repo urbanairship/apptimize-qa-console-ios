@@ -8,8 +8,13 @@
 import UIKit
 import Apptimize
 
+public extension NSNotification.Name {
+    static let ApptimizeQAConsoleWillAppear = Notification.Name("ApptimizeQAConsoleWillAppear")
+    static let ApptimizeQAConsoleWillDisappear = Notification.Name("ApptimizeQAConsoleWillDisappear")
+}
+
 public class ApptimizeQAConsole {
-    fileprivate static let shared = ApptimizeQAConsole()
+    internal static let shared = ApptimizeQAConsole()
     
     private var _isViewControllerPresented = false
     private var rootViewController: UIViewController?
@@ -33,6 +38,8 @@ public class ApptimizeQAConsole {
         }
         shared.rootViewController = root
 
+        NotificationCenter.default.post(name: NSNotification.Name.ApptimizeQAConsoleWillAppear, object: shared)
+
         let navigation = UINavigationController(rootViewController: root)
         controller.present(navigation, animated: true, completion: nil)
         shared._isViewControllerPresented = true
@@ -43,7 +50,13 @@ public class ApptimizeQAConsole {
             return
         }
         
+        NotificationCenter.default.post(name: NSNotification.Name.ApptimizeQAConsoleWillDisappear, object: shared)
+
         controller.dismiss(animated: true)
+    }
+    
+    public static func version() -> String {
+        return ApptimizeQAConsoleVersion.Version
     }
 }
 

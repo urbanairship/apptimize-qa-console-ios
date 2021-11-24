@@ -5,9 +5,9 @@
         "package": "Apptimize",
         "repositoryURL": "https://github.com/urbanairship/apptimize-ios-kit",
         "state": {
-          "branch": "master",
-          "revision": "1c4972d57c8a5d56a6f15dfa80111d2321e6d5f1",
-          "version": null
+          "branch": null,
+          "revision": "7feae05db04f50afbd9ec66c8d82f43ddd826e45",
+          "version": "3.5.8"
         }
       }
     ]

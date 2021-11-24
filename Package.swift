@@ -14,7 +14,7 @@ let package = Package(
             targets: ["ApptimizeQAConsole"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/urbanairship/apptimize-ios-kit", from: "3.4.19")
+        .package(url: "https://github.com/urbanairship/apptimize-ios-kit", from: "3.5.8")
     ],
     targets: [
         .target(

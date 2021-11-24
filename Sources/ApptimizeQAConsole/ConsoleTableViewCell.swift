@@ -11,7 +11,6 @@ class ConsoleTableViewCell: UITableViewCell {
     
     private (set) var item: VariantInfo?
     
-    
     func setVariant(variant: VariantInfo, isSelected: Bool) {
         self.item = variant
         self.reloadUi()

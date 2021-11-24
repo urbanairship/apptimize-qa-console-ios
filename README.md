@@ -1,5 +1,7 @@
 # Apptimize QA Console for iOS
 
+![https://github.com/urbanairship/apptimize-qa-console-ios/releases/latest](https://img.shields.io/github/v/release/urbanairship/apptimize-qa-console-ios) ![](https://img.shields.io/badge/Swift-5.0-F05138) ![#cocoapods](https://img.shields.io/badge/package-cocoapods-success) ![#swift-package](https://img.shields.io/badge/package-Swift%20Package-success) ![#license](https://img.shields.io/badge/license-Apache%202.0-orange)
+
 For more information see the [QA Console FAQ page](https://faq.apptimize.com/hc/en-us/articles/360021675293-How-do-I-use-the-Apptimize-QA-Console-).
 
 ## Introduction
@@ -74,4 +76,9 @@ Refer to CocoaPod’s [Getting Started Guide](https://guides.cocoapods.org/using
    ```swift
    ApptimizeQAConsole.display()
    ```
+
+## Notes
+
+* In order to display *Instant Updates* while using the QA console to force specific variants, you will need to add the `ApptimizeForceVariantsShowWinnersAndInstantUpdates` **Boolean** value to your `Info.plist` with the value set to `YES` (or if you call `Apptimize.start(withApplicationKey:options:)` you should add the `ApptimizeForceVariantsShowWinnersAndInstantUpdatesOption` with a value of `YES` to the `options` dictionary).
+* You can automatically refresh your UI whenever the QA Console is hidden if you wish by listening to the notifications `NSNotification.Name.ApptimizeQAConsoleWillDisappear` and `NSNotification.Name.ApptimizeQAConsoleWillAppear`.
 

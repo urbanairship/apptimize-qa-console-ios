@@ -34,23 +34,38 @@ class RootViewController: UITableViewController {
         // Do any additional setup after loading the view, typically from a nib.
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Refresh", style: .plain, target: self, action: #selector(refresh))
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.ApptimizeTestsProcessed, object: self, queue: nil) { _ in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.ApptimizeTestsProcessed, object: nil, queue: nil) { _ in
             self.refresh()
         }
-
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.ApptimizeQAConsoleWillDisappear, object: nil, queue: nil) { _ in
+            self.refresh()
+        }
+        
         refresh()
     }
     
     @objc func refresh()
     {
-        guard let testInfo = Apptimize.testInfo() else {
+        guard let testInfo = Apptimize.testInfo(),
+              let winnerInfo = Apptimize.instantUpdateAndWinnerInfo() else {
             self.enrolledTests = []
             return
         }
         
         self.enrolledTests = testInfo.values.map({ test in
             TableViewDataModel(title: test.testName(), detail: "\(test.enrolledVariantName()) (\(test.enrolledVariantID()))")
-        }).sorted(by: { l, r in l.title.lowercased() < r.title.lowercased() })
+        })
+        
+        self.enrolledTests.append(contentsOf: winnerInfo.values.map({ winner in
+            if (winner.isInstantUpdate()) {
+                return TableViewDataModel(title: winner.instantUpdateName(), detail: "Instant Update \(winner.instantUpdateID())")
+            }
+            
+            return TableViewDataModel(title: winner.winningExperimentName(), detail: "Winner: \(winner.winningVariantName()) (\(winner.winningVariantID()))")
+        }))
+        
+        self.enrolledTests = self.enrolledTests.sorted(by: { l, r in l.title.lowercased() < r.title.lowercased() })
         
         self.tableView.reloadData()
     }
