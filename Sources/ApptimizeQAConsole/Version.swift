@@ -5,5 +5,5 @@
 import Foundation
 
 class ApptimizeQAConsoleVersion {
-    public static var Version = "1.0.2"
+    public static var Version = "1.0.3"
 }
